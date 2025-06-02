@@ -29,3 +29,7 @@ Una vez lanzada la aplicación puedes abrir un navegador y probar la página de 
 
 - [http://localhost:8080/login](http://localhost:8080/login)
 # TodoListSpringBoot
+
+---
+# Link Trello Maximiliano Madrid:
+[Link Trello](https://trello.com/b/HADJXX8i/todolist-epn) 
