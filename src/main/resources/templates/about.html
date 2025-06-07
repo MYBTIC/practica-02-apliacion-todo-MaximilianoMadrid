@@ -4,19 +4,19 @@
 <head th:replace="fragments :: head (titulo='Acerca de')"></head>
 
 <body>
-<div class="container-fluid">
-    <div class="container-fluid">
-        <h1>ToDoList</h1>
-        <ul>
-            <li>Desarrollada por Maximiliano Madrid Benavides </li>
-            <li>Versión 1.0.1 (en desarrollo)</li>
-            <li>Fecha de release: pendiente de release</li>
-        </ul>
+    <div th:replace="fragments :: navbar(${usuario})"></div>
+
+    <div class="container-fluid mt-3">
+        <div class="container-fluid">
+            <h1>ToDoList</h1>
+            <ul>
+                <li>Desarrollada por Maximiliano Madrid Benavides</li>
+                <li>Versión 1.0.1 (en desarrollo)</li>
+                <li>Fecha de release: pendiente de release</li>
+            </ul>
+        </div>
     </div>
 
-</div>
-
-<div th:replace="fragments::javascript"/>
-
+    <div th:replace="fragments::javascript"/>
 </body>
 </html>
