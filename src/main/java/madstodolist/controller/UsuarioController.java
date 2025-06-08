@@ -4,7 +4,6 @@ import madstodolist.authentication.ManagerUserSession;
 import madstodolist.controller.exception.UsuarioNoLogeadoException;
 import madstodolist.dto.UsuarioData;
 import madstodolist.service.UsuarioService;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,7 @@ public class UsuarioController {
         model.addAttribute("usuario", usuario);
         return "formCuentaUsuario";
     }
-
-    @GetMapping("/registrados")
+   @GetMapping("/registrados")
     public String listadoUsuarios(Model model) {
         List<UsuarioData> usuarios = usuarioService.findAll();
         model.addAttribute("usuarios", usuarios);
@@ -51,4 +49,5 @@ public class UsuarioController {
 
         return "listaUsuarios";
     }
+  
 }
