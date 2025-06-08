@@ -2,6 +2,7 @@ package madstodolist.controller;
 
 import madstodolist.authentication.ManagerUserSession;
 import madstodolist.controller.exception.UsuarioNoLogeadoException;
+import madstodolist.controller.exception.UsuarioNotFoundException;
 import madstodolist.dto.UsuarioData;
 import madstodolist.service.UsuarioService;
 import java.util.List;
@@ -35,7 +36,8 @@ public class UsuarioController {
         model.addAttribute("usuario", usuario);
         return "formCuentaUsuario";
     }
-   @GetMapping("/registrados")
+
+    @GetMapping("/registrados")
     public String listadoUsuarios(Model model) {
         List<UsuarioData> usuarios = usuarioService.findAll();
         model.addAttribute("usuarios", usuarios);
@@ -49,5 +51,24 @@ public class UsuarioController {
 
         return "listaUsuarios";
     }
-  
+
+    @GetMapping("/registrados/{id}")
+    public String descripcionUsuario(@PathVariable(value = "id") Long idUsuario, Model model) {
+        // Obtenemos los datos del usuario a mostrar
+        UsuarioData usuarioMostrado = usuarioService.findById(idUsuario);
+        if (usuarioMostrado == null) {
+            throw new UsuarioNotFoundException();
+        }
+        model.addAttribute("usuarioMostrado", usuarioMostrado);
+
+        // Añadimos también el usuario logeado (para la navbar)
+        Long idUsuarioLogeado = managerUserSession.usuarioLogeado();
+        if (idUsuarioLogeado != null) {
+            UsuarioData usuarioLogeado = usuarioService.findById(idUsuarioLogeado);
+            model.addAttribute("usuario", usuarioLogeado);
+        }
+
+        return "descripcionUsuario";
+    }
+
 }
