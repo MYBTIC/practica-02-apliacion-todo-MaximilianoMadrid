@@ -4,57 +4,77 @@ import madstodolist.authentication.ManagerUserSession;
 import madstodolist.dto.UsuarioData;
 import madstodolist.service.UsuarioService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ui.Model;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.Arrays;
+import java.util.List;
 
-@WebMvcTest(UsuarioController.class)
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 public class UsuarioControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private UsuarioService usuarioService;
 
-    @MockBean
+    @Mock
     private ManagerUserSession managerUserSession;
 
-    @Test
-    public void accesoCuentaUsuarioLogeado() throws Exception {
-        UsuarioData usuario = new UsuarioData();
-        usuario.setId(1L);
-        usuario.setNombre("Usuario Prueba");
-        usuario.setEmail("test@test.com");
+    @Mock
+    private Model model;
 
-        when(managerUserSession.usuarioLogeado()).thenReturn(1L);
-        when(usuarioService.findById(1L)).thenReturn(usuario);
-
-        mockMvc.perform(get("/usuarios/1/cuenta"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("formCuentaUsuario"))
-                .andExpect(model().attributeExists("usuario"))
-                .andExpect(model().attribute("usuario", usuario));
-    }
+    @InjectMocks
+    private UsuarioController usuarioController;
 
     @Test
-    public void accesoCuentaUsuarioNoLogeado() throws Exception {
+    public void testListadoUsuarios() {
+        // Given
+        UsuarioData usuarioData1 = new UsuarioData();
+        usuarioData1.setId(1L);
+        usuarioData1.setEmail("user1@ua");
+
+        UsuarioData usuarioData2 = new UsuarioData();
+        usuarioData2.setId(2L);
+        usuarioData2.setEmail("user2@ua");
+
+        List<UsuarioData> usuarios = Arrays.asList(usuarioData1, usuarioData2);
+
+        when(usuarioService.findAll()).thenReturn(usuarios);
         when(managerUserSession.usuarioLogeado()).thenReturn(null);
 
-        mockMvc.perform(get("/usuarios/1/cuenta"))
-                .andExpect(status().isUnauthorized());
+        // When
+        String viewName = usuarioController.listadoUsuarios(model);
+
+        // Then
+        assertThat(viewName).isEqualTo("listaUsuarios");
+        verify(usuarioService).findAll();
+        verify(model).addAttribute("usuarios", usuarios);
+        verify(model, never()).addAttribute(eq("usuario"), any());
     }
 
     @Test
-    public void accesoCuentaOtroUsuario() throws Exception {
-        when(managerUserSession.usuarioLogeado()).thenReturn(2L);
+    public void testListadoUsuariosConUsuarioLogeado() {
+        // Given
+        UsuarioData usuarioData1 = new UsuarioData();
+        usuarioData1.setId(1L);
 
-        mockMvc.perform(get("/usuarios/1/cuenta"))
-                .andExpect(status().isUnauthorized());
+        UsuarioData usuarioLogeado = new UsuarioData();
+        usuarioLogeado.setId(3L);
+
+        when(usuarioService.findAll()).thenReturn(Arrays.asList(usuarioData1));
+        when(managerUserSession.usuarioLogeado()).thenReturn(3L);
+        when(usuarioService.findById(3L)).thenReturn(usuarioLogeado);
+
+        // When
+        usuarioController.listadoUsuarios(model);
+
+        // Then
+        verify(model).addAttribute("usuarios", Arrays.asList(usuarioData1));
+        verify(model).addAttribute("usuario", usuarioLogeado);
     }
 }
