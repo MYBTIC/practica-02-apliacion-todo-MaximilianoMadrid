@@ -87,4 +87,15 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public UsuarioData getUsuarioDataPublic(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElse(null);
+        if (usuario == null) {
+            return null;
+        }
+        UsuarioData usuarioData = modelMapper.map(usuario, UsuarioData.class);
+        usuarioData.setPassword(null); // Aseguramos que no se exponga la contraseña
+        return usuarioData;
+    }
+
 }

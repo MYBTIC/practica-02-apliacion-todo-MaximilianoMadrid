@@ -54,21 +54,19 @@ public class UsuarioController {
 
     @GetMapping("/registrados/{id}")
     public String descripcionUsuario(@PathVariable(value = "id") Long idUsuario, Model model) {
-        // Obtenemos los datos del usuario a mostrar
-        UsuarioData usuarioMostrado = usuarioService.findById(idUsuario);
-        if (usuarioMostrado == null) {
+        UsuarioData usuarioData = usuarioService.getUsuarioDataPublic(idUsuario);
+        if (usuarioData == null) {
             throw new UsuarioNotFoundException();
         }
-        model.addAttribute("usuarioMostrado", usuarioMostrado);
 
-        // Añadimos también el usuario logeado (para la navbar)
+        model.addAttribute("usuarioDesc", usuarioData);
+
+        // Para la navbar (si hay usuario logueado)
         Long idUsuarioLogeado = managerUserSession.usuarioLogeado();
         if (idUsuarioLogeado != null) {
-            UsuarioData usuarioLogeado = usuarioService.findById(idUsuarioLogeado);
-            model.addAttribute("usuario", usuarioLogeado);
+            model.addAttribute("usuario", usuarioService.findById(idUsuarioLogeado));
         }
 
         return "descripcionUsuario";
     }
-
 }
