@@ -5,54 +5,70 @@
     <meta charset="UTF-8"/>
     <title th:text="${titulo}"></title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Fuerza la alineación derecha */
+        .navbar-nav.user-menu {
+            margin-left: auto !important;
+        }
+    </style>
 </head>
 
 <div th:fragment="navbar(usuario)">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
+            <!-- Logo -->
             <a class="navbar-brand" th:href="@{/about}">ToDoList</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            
+            <!-- Botón móvil -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0" th:if="${usuario != null}">
-    <li class="nav-item">
-        <a class="nav-link" th:href="@{/usuarios/{id}/tareas(id=${usuario.id})}">
-            <i class="fas fa-tasks me-1"></i> Tareas
-        </a>
-    </li>
-</ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" th:if="${usuario != null}">
+
+            <!-- Contenido principal -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <!-- Menú izquierda -->
+                <ul class="navbar-nav" th:if="${usuario != null}">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/usuarios/{id}/tareas(id=${usuario.id})}">
+                            <i class="fas fa-tasks me-1"></i> Tareas
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Menú usuario - EXTREMO DERECHO -->
+                <ul class="navbar-nav user-menu" th:if="${usuario != null}">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" 
+                        <a class="nav-link dropdown-toggle pe-3" href="#" id="userDropdown" 
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user-circle me-1"></i>
+                            <i class="fas fa-user-circle me-2"></i>
                             <span th:text="${usuario.nombre}"></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" th:href="@{/usuarios/{id}/cuenta(id=${usuario.id})}">
                                     <i class="fas fa-user-cog me-1"></i> Mi cuenta
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item" th:href="@{/logout}">
-                                    <i class="fas fa-sign-out-alt me-1"></i> 
-                                    Cerrar sesión
+                                <a class="dropdown-item text-danger" th:href="@{/logout}">
+                                    <i class="fas fa-sign-out-alt me-1"></i> Cerrar sesión
                                 </a>
                             </li>
                         </ul>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" th:unless="${usuario != null}">
+
+                <!-- Menú invitado - EXTREMO DERECHO -->
+                <ul class="navbar-nav user-menu" th:unless="${usuario != null}">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/login}">Login</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/registro}">Registro</a>
+                    <li class="nav-item ms-3">
+                        <a class="btn btn-outline-light btn-sm" th:href="@{/registro}">
+                            <i class="fas fa-user-plus me-1"></i> Registro
+                        </a>
                     </li>
                 </ul>
             </div>
