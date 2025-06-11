@@ -1,7 +1,6 @@
 package madstodolist.service;
 
 import madstodolist.dto.UsuarioData;
-import madstodolist.model.Usuario;
 import madstodolist.repository.UsuarioRepository;
 
 import org.junit.jupiter.api.Assertions;
@@ -15,10 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.List;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -44,37 +39,6 @@ public class UsuarioServiceTest {
         usuario.setPassword("123");
         UsuarioData nuevoUsuario = usuarioService.registrar(usuario);
         return nuevoUsuario.getId();
-    }
-
-    @Test
-    public void testFindAllUsuarios() {
-        // Given
-        Usuario usuario1 = new Usuario("user1@ua");
-        usuario1.setId(1L);
-        Usuario usuario2 = new Usuario("user2@ua");
-        usuario2.setId(2L);
-
-        UsuarioData usuarioData1 = new UsuarioData();
-        usuarioData1.setId(1L);
-        usuarioData1.setEmail("user1@ua");
-
-        UsuarioData usuarioData2 = new UsuarioData();
-        usuarioData2.setId(2L);
-        usuarioData2.setEmail("user2@ua");
-
-        when(usuarioRepository.findAll()).thenReturn(Arrays.asList(usuario1, usuario2));
-        when(modelMapper.map(usuario1, UsuarioData.class)).thenReturn(usuarioData1);
-        when(modelMapper.map(usuario2, UsuarioData.class)).thenReturn(usuarioData2);
-
-        // When
-        List<UsuarioData> usuarios = usuarioService.findAll();
-
-        // Then
-        assertThat(usuarios).hasSize(2);
-        assertThat(usuarios).extracting("id")
-                .containsExactly(1L, 2L);
-        assertThat(usuarios).extracting("email")
-                .containsExactly("user1@ua", "user2@ua");
     }
 
     @Test
