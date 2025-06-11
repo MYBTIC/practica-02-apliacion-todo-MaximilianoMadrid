@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: head (titulo='Descripción de usuario')"></head>
+<body>
+    <div th:replace="fragments :: navbar(${usuario})"></div>
+
+    <div class="container-fluid mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Descripción de Usuario</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">ID:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext" th:text="${usuarioDesc.id}"></p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Email:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext" th:text="${usuarioDesc.email}"></p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Nombre:</label>
+                            <div class="col-sm-8">
+                                <p class="form-control-plaintext" th:text="${usuarioDesc.nombre}"></p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Fecha Nacimiento:</label>
+                            <div class="col-sm-8">
+                                
+                                <p class="form-control-plaintext" 
+                                   th:text="${usuarioDesc.fechaNacimiento} ? ${usuarioDesc.fechaNacimiento}: 'No especificada' "></p>
+
+                                <!-- <p class="form-control-plaintext" 
+                                   th:text="${usuarioDesc.fechaNacimiento} ? 
+                                   ${#temporals.format(usuarioDesc.fechaNacimiento, 'dd-MM-yyyy')} : 'No especificada'"></p> -->
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a th:href="@{/registrados}" class="btn btn-primary">
+                                Volver al listado
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="fragments::javascript"></div>
+</body>
+</html>
